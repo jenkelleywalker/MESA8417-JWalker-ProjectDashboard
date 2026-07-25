@@ -178,7 +178,7 @@ def plot_top_bottom(data, ascending, title):
     return chart
 
 
-st.image("Project_Logo.png", use_container_width=True)
+st.image("Project Logo.png", use_container_width=True)
 st.markdown("""
 Life expectancy in the United States tells a deeply unequal story. County-level averages vary by more than 20 years, and that gap reflects systematic differences in the social and economic conditions of communities across the country. This dashboard draws on 2025 County Health Rankings data to examine how factors like household income, food access, insurance coverage, and physical activity relate to longevity across the United States.
 
