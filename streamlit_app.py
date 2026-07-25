@@ -151,10 +151,10 @@ def plot_strip_and_scatter(full_df, determinant_col, label, selected_region):
     ).encode(y="y:Q", tooltip=[alt.Tooltip("y:Q", title="National Avg. Life Expectancy", format=".1f")])
 
     avg_label = alt.Chart(avg_df).mark_text(
-        align="right", dx=-4, dy=-8, color="#888888", fontSize=11
+        align="left", dx=4, dy=-8, color="#888888", fontSize=11
     ).encode(
         y="y:Q",
-        x=alt.value(620),
+        x=alt.value(0),
         text=alt.value(f"Nat'l Avg: {national_avg:.1f} yrs")
     )
 
