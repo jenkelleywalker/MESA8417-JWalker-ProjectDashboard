@@ -165,7 +165,8 @@ def plot_top_bottom(data, ascending, title):
     """Horizontal bar chart of top/bottom 10 counties, with hover highlight."""
     subset = data.dropna(subset=["Life Expectancy"]).sort_values(
         "Life Expectancy", ascending=ascending
-    ).head(10)
+    ).head(10).copy()
+    subset["County, State"] = subset["County"] + ", " + subset["State"]
 
     hover = alt.selection_point(on="mouseover", nearest=True, empty=False)
 
@@ -178,7 +179,7 @@ def plot_top_bottom(data, ascending, title):
                 title="Life Expectancy (Years)",
                 scale=alt.Scale(zero=False),
             ),
-            y=alt.Y("County:N", sort="x" if ascending else "-x", title=None),
+            y=alt.Y("County, State:N", sort="x" if ascending else "-x", title=None),
             color=alt.Color(
                 "Region:N",
                 scale=region_scale,
