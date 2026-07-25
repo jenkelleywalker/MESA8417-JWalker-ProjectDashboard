@@ -124,8 +124,8 @@ def plot_strip_and_scatter(full_df, determinant_col, label, selected_region):
             scale=alt.Scale(zero=False),
         ),
         color=alt.Color("Region:N", scale=region_scale, legend=alt.Legend(orient="right")),
-        opacity=alt.condition(county_hover, alt.value(1.0), alt.value(0.65)),
-        size=alt.condition(county_hover, alt.value(180), alt.value(45)),
+        opacity=alt.condition(county_hover, alt.value(1.0), alt.value(0.4)),
+        size=alt.condition(county_hover, alt.value(120), alt.value(20)),
         tooltip=["County:N", "State:N", "Region:N", "Life Expectancy:Q", f"{determinant_col}:Q"],
     ).add_params(
         county_hover
