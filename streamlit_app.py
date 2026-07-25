@@ -17,6 +17,8 @@ def load_data():
         "% Physically Inactive",
         "% Adults Reporting Currently Smoking",
         "% Rural",
+        "% Adults with Obesity",
+        "% Children in Single-Parent Households",
     ]
     for col in numeric_cols:
         df[col] = pd.to_numeric(df[col], errors="coerce")
@@ -69,6 +71,8 @@ determinant_options = {
     "% Physically Inactive": "% Physically Inactive",
     "% Smoking": "% Adults Reporting Currently Smoking",
     "% Rural": "% Rural",
+    "% Adults with Obesity": "% Adults with Obesity",
+    "% Children in Single-Parent Households": "% Children in Single-Parent Households",
 }
 selected_label = st.sidebar.selectbox("Select Social Determinant", list(determinant_options.keys()))
 selected_determinant = determinant_options[selected_label]
