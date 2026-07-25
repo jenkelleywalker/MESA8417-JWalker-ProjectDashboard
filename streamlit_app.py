@@ -108,7 +108,10 @@ def plot_strip_and_scatter(full_df, determinant_col, label, selected_region):
         height=260,
         title=alt.TitleParams(
             text="Life Expectancy Distribution by Region",
-            subtitle="Hover to highlight the same county on the scatter plot, below",
+            subtitle="Hover over a county dot to highlight it in the scatter plot below",
+            subtitleColor="#E45756",
+            subtitleFontSize=12,
+            subtitleFontStyle="italic",
         ),
     )
 
