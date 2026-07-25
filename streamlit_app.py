@@ -143,7 +143,12 @@ def plot_strip_and_scatter(full_df, determinant_col, label, selected_region):
         ),
     )
 
-    return strip & scatter
+    national_avg = full_df["Life Expectancy"].mean()
+    avg_line = alt.Chart(pd.DataFrame({"y": [national_avg]})).mark_rule(
+        color="#888888", strokeDash=[6, 3], size=1.5
+    ).encode(y="y:Q", tooltip=[alt.Tooltip("y:Q", title="National Avg. Life Expectancy", format=".1f")])
+
+    return strip & (scatter + avg_line)
 
 
 def plot_top_bottom(data, ascending, title):
