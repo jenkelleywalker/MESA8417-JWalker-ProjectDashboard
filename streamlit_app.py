@@ -85,6 +85,8 @@ if selected_region == "All Regions":
 else:
     filtered_df = df[df["Region"] == selected_region].copy()
 
+extremes_df = filtered_df.copy()
+
 if county_search:
     filtered_df = filtered_df[filtered_df["County"].str.lower().str.contains(county_search.strip().lower(), na=False)]
 
@@ -239,11 +241,11 @@ col3, col4 = st.columns(2)
 
 with col3:
     st.altair_chart(
-        plot_top_bottom(filtered_df, ascending=True, title="Lowest Life Expectancy (Bottom 10)"),
+        plot_top_bottom(extremes_df, ascending=True, title="Lowest Life Expectancy (Bottom 10)"),
         use_container_width=True,
     )
 with col4:
     st.altair_chart(
-        plot_top_bottom(filtered_df, ascending=False, title="Highest Life Expectancy (Top 10)"),
+        plot_top_bottom(extremes_df, ascending=False, title="Highest Life Expectancy (Top 10)"),
         use_container_width=True,
     )
