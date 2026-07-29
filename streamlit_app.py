@@ -62,6 +62,9 @@ selected_region = st.sidebar.radio(
 )
 
 st.sidebar.markdown("---")
+county_search = st.sidebar.text_input("Search County", placeholder="e.g. Suffolk")
+
+st.sidebar.markdown("---")
 
 determinant_options = {
     "Median Household Income": "Median Household Income",
@@ -81,6 +84,9 @@ if selected_region == "All Regions":
     filtered_df = df.copy()
 else:
     filtered_df = df[df["Region"] == selected_region].copy()
+
+if county_search:
+    filtered_df = filtered_df[filtered_df["County"].str.lower().str.contains(county_search.strip().lower(), na=False)]
 
 
 def plot_strip_and_scatter(full_df, determinant_col, label, selected_region):
@@ -221,7 +227,7 @@ Life expectancy in the United States tells a deeply unequal story. County-level 
 st.divider()
 
 st.altair_chart(
-    plot_strip_and_scatter(df, selected_determinant, selected_label, selected_region),
+    plot_strip_and_scatter(filtered_df, selected_determinant, selected_label, selected_region),
     use_container_width=True,
 )
 
