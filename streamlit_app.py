@@ -208,7 +208,7 @@ def plot_top_bottom(data, ascending, title):
             tooltip=["County:N", "State:N", "Region:N", "Life Expectancy:Q"],
         )
         .add_params(hover)
-        .properties(height=380, title=title)
+        .properties(height=420, title=title)
     )
     return chart
 
