@@ -75,9 +75,6 @@ selected_region = st.sidebar.radio(
 )
 
 st.sidebar.markdown("---")
-county_search = st.sidebar.text_input("Search County", placeholder="e.g. Suffolk, MA")
-
-st.sidebar.markdown("---")
 selected_label = st.sidebar.selectbox("Select Social Determinant", list(determinant_options.keys()))
 selected_determinant = determinant_options[selected_label]
 
@@ -87,11 +84,6 @@ else:
     filtered_df = df[df["Region"] == selected_region].copy()
 
 extremes_df = filtered_df.copy()
-
-if county_search:
-    filtered_df = filtered_df[
-        filtered_df["County"].str.lower().str.contains(county_search.strip().lower(), na=False)
-    ]
 
 def plot_strip_and_scatter(full_df, determinant_col, label, selected_region):
     strip_data = full_df.dropna(subset=["Life Expectancy", "Region"]).copy()
