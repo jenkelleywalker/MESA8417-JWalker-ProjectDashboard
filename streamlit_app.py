@@ -41,6 +41,7 @@ STATE_ABBREV = {
     'Vermont': 'VT', 'Virginia': 'VA', 'Washington': 'WA', 'West Virginia': 'WV',
     'Wisconsin': 'WI', 'Wyoming': 'WY'
 }
+
 REGION_COLORS = {
     "Midwest": "#4C78A8",
     "Northeast": "#F58518",
@@ -54,32 +55,6 @@ region_scale = alt.Scale(
     range=list(REGION_COLORS.values()),
 )
 
-st.sidebar.title("Dashboard Controls")
-
-selected_region = st.sidebar.radio(
-    "Select Region",
-    options=["All Regions"] + all_regions,
-)
-
-st.sidebar.markdown("---")
-county_search = st.sidebar.text_input("Search County", placeholder="e.g. Suffolk, MA")
-
-if county_search:
-    matches = sorted(
-        (df["County"] + ", " + df["State"].map(STATE_ABBREV))
-        .dropna()
-        [df["County"].str.lower().str.contains(county_search.strip().lower(), na=False)]
-        .unique()
-        .tolist()
-    )
-    if matches:
-        selected_county = st.sidebar.selectbox("Select County", matches)
-    else:
-        selected_county = None
-        st.sidebar.caption("No counties found.")
-else:
-    selected_county = None
-
 determinant_options = {
     "Median Household Income": "Median Household Income",
     "% Uninsured Adults": "% Uninsured Adults",
@@ -91,9 +66,23 @@ determinant_options = {
     "% Adults with Obesity": "% Adults with Obesity",
     "% Children in Single-Parent Households": "% Children in Single-Parent Households",
 }
+
+# --- SIDEBAR ---
+st.sidebar.title("Dashboard Controls")
+
+selected_region = st.sidebar.radio(
+    "Select Region",
+    options=["All Regions"] + all_regions,
+)
+
+st.sidebar.markdown("---")
+county_search = st.sidebar.text_input("Search County", placeholder="e.g. Suffolk, MA")
+
+st.sidebar.markdown("---")
 selected_label = st.sidebar.selectbox("Select Social Determinant", list(determinant_options.keys()))
 selected_determinant = determinant_options[selected_label]
 
+# --- FILTER DATA ---
 if selected_region == "All Regions":
     filtered_df = df.copy()
 else:
@@ -101,18 +90,15 @@ else:
 
 extremes_df = filtered_df.copy()
 
-if selected_county:
-    county_name, state_abbrev = selected_county.rsplit(", ", 1)
-    state_full = {v: k for k, v in STATE_ABBREV.items()}.get(state_abbrev)
+if county_search:
     filtered_df = filtered_df[
-        (filtered_df["County"] == county_name) & (filtered_df["State"] == state_full)
- ]
-    
-def plot_strip_and_scatter(full_df, determinant_col, label, selected_region):
-    """Strip plot and scatter composed into one chart, sharing a county-level
-    click selection. Clicking a dot in the strip plot highlights the same
-    county in the scatter below."""
+        filtered_df["County"].str.lower().str.contains(county_search.strip().lower(), na=False)
+    ]
 
+
+# --- CHART FUNCTIONS ---
+
+def plot_strip_and_scatter(full_df, determinant_col, label, selected_region):
     strip_data = full_df.dropna(subset=["Life Expectancy", "Region"]).copy()
     scatter_data = full_df.dropna(subset=["Life Expectancy", determinant_col, "Region"]).copy()
 
@@ -143,8 +129,8 @@ def plot_strip_and_scatter(full_df, determinant_col, label, selected_region):
             alt.Color("Region:N", scale=region_scale, legend=None),
             alt.value("#d0d0d0"),
         ),
-        opacity=alt.condition(county_hover, alt.value(1.0), alt.value(0.4) if selected_region == "All Regions" else alt.value(0.65)),
-        size=alt.condition(county_hover, alt.value(180), alt.value(25) if selected_region == "All Regions" else alt.value(45)),
+        opacity=alt.condition(county_hover, alt.value(1.0), alt.value(0.75)),
+        size=alt.condition(county_hover, alt.value(80), alt.value(25)),
         tooltip=["County:N", "State:N", "Region:N", "Life Expectancy:Q"],
     ).add_params(
         county_hover
@@ -189,7 +175,7 @@ def plot_strip_and_scatter(full_df, determinant_col, label, selected_region):
 
     national_avg = full_df["Life Expectancy"].mean()
     avg_df = pd.DataFrame({"y": [national_avg]})
-    
+
     avg_line = alt.Chart(avg_df).mark_rule(
         color="#888888", strokeDash=[6, 3], size=1.5
     ).encode(y="y:Q", tooltip=[alt.Tooltip("y:Q", title="National Avg. Life Expectancy", format=".1f")])
@@ -206,7 +192,6 @@ def plot_strip_and_scatter(full_df, determinant_col, label, selected_region):
 
 
 def plot_top_bottom(data, ascending, title):
-    """Horizontal bar chart of top/bottom 10 counties, with hover highlight."""
     subset = data.dropna(subset=["Life Expectancy"]).sort_values(
         "Life Expectancy", ascending=ascending
     ).head(10).copy()
@@ -237,6 +222,8 @@ def plot_top_bottom(data, ascending, title):
     )
     return chart
 
+
+# --- LAYOUT ---
 
 st.image("Project Logo_v4.png", use_container_width=True)
 st.markdown("<br>", unsafe_allow_html=True)
