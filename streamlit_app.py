@@ -247,12 +247,7 @@ if county_search:
         (df["County"] + ", " + df["State"].map(STATE_ABBREV))
         .str.lower()
         .str.contains(county_search.strip().lower(), na=False)
-    ][["County", "State", "Region", "Life Expectancy",
-       "Median Household Income", "% Uninsured Adults",
-       "% Food Insecure", "% Enrolled in Free or Reduced Lunch",
-       "% Physically Inactive", "% Adults Reporting Currently Smoking",
-       "% Rural", "% Adults with Obesity",
-       "% Children in Single-Parent Households"]].copy()
+    ][["County", "State", "Region", "Life Expectancy", selected_determinant]].copy()
     
     if len(results) == 0:
         st.caption("No counties found.")
