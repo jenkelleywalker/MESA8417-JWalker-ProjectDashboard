@@ -237,3 +237,24 @@ with col4:
         plot_top_bottom(extremes_df, ascending=False, title="Highest Life Expectancy (Top 10)"),
         use_container_width=True,
     )
+
+st.divider()
+st.subheader("County Lookup")
+county_search = st.text_input("Search for a county", placeholder="e.g. Suffolk, MA")
+
+if county_search:
+    results = df[
+        (df["County"] + ", " + df["State"].map(STATE_ABBREV))
+        .str.lower()
+        .str.contains(county_search.strip().lower(), na=False)
+    ][["County", "State", "Region", "Life Expectancy",
+       "Median Household Income", "% Uninsured Adults",
+       "% Food Insecure", "% Enrolled in Free or Reduced Lunch",
+       "% Physically Inactive", "% Adults Reporting Currently Smoking",
+       "% Rural", "% Adults with Obesity",
+       "% Children in Single-Parent Households"]].copy()
+    
+    if len(results) == 0:
+        st.caption("No counties found.")
+    else:
+        st.dataframe(results, use_container_width=True, hide_index=True)
