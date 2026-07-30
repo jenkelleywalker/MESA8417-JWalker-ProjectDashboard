@@ -74,11 +74,6 @@ selected_region = st.sidebar.radio(
     options=["All Regions"] + all_regions,
 )
 
-st.sidebar.markdown("---")
-selected_label = st.sidebar.selectbox("Select Social Determinant", list(determinant_options.keys()))
-selected_determinant = determinant_options[selected_label]
-
-
 if selected_region == "All Regions":
     filtered_df = df.copy()
 else:
@@ -217,6 +212,15 @@ Life expectancy in the United States tells a deeply unequal story. County-level 
 """)
 st.divider()
 
+st.divider()
+
+selected_label = st.selectbox("Select Social Determinant", list(determinant_options.keys()))
+selected_determinant = determinant_options[selected_label]
+
+st.altair_chart(
+    plot_strip_and_scatter(filtered_df, selected_determinant, selected_label, selected_region),
+    use_container_width=True,
+)
 st.altair_chart(
     plot_strip_and_scatter(filtered_df, selected_determinant, selected_label, selected_region),
     use_container_width=True,
