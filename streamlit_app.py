@@ -106,7 +106,8 @@ if selected_county:
     state_full = {v: k for k, v in STATE_ABBREV.items()}.get(state_abbrev)
     filtered_df = filtered_df[
         (filtered_df["County"] == county_name) & (filtered_df["State"] == state_full)
-
+ ]
+    
 def plot_strip_and_scatter(full_df, determinant_col, label, selected_region):
     """Strip plot and scatter composed into one chart, sharing a county-level
     click selection. Clicking a dot in the strip plot highlights the same
