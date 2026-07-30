@@ -41,19 +41,6 @@ STATE_ABBREV = {
     'Vermont': 'VT', 'Virginia': 'VA', 'Washington': 'WA', 'West Virginia': 'WV',
     'Wisconsin': 'WI', 'Wyoming': 'WY'
 }
-
-determinant_options = {
-    "Median Household Income": "Median Household Income",
-    "% Uninsured Adults": "% Uninsured Adults",
-    "% Food Insecure": "% Food Insecure",
-    "% Free or Reduced Lunch": "% Enrolled in Free or Reduced Lunch",
-    "% Physically Inactive": "% Physically Inactive",
-    "% Smoking": "% Adults Reporting Currently Smoking",
-    "% Rural": "% Rural",
-    "% Adults with Obesity": "% Adults with Obesity",
-    "% Children in Single-Parent Households": "% Children in Single-Parent Households",
-}
-
 REGION_COLORS = {
     "Midwest": "#4C78A8",
     "Northeast": "#F58518",
@@ -74,12 +61,35 @@ selected_region = st.sidebar.radio(
     options=["All Regions"] + all_regions,
 )
 
+st.sidebar.markdown("---")
+county_search = st.sidebar.text_input("Search County", placeholder="e.g. Suffolk")
+
+st.sidebar.markdown("---")
+
+determinant_options = {
+    "Median Household Income": "Median Household Income",
+    "% Uninsured Adults": "% Uninsured Adults",
+    "% Food Insecure": "% Food Insecure",
+    "% Free or Reduced Lunch": "% Enrolled in Free or Reduced Lunch",
+    "% Physically Inactive": "% Physically Inactive",
+    "% Smoking": "% Adults Reporting Currently Smoking",
+    "% Rural": "% Rural",
+    "% Adults with Obesity": "% Adults with Obesity",
+    "% Children in Single-Parent Households": "% Children in Single-Parent Households",
+}
+selected_label = st.sidebar.selectbox("Select Social Determinant", list(determinant_options.keys()))
+selected_determinant = determinant_options[selected_label]
+
 if selected_region == "All Regions":
     filtered_df = df.copy()
 else:
     filtered_df = df[df["Region"] == selected_region].copy()
 
 extremes_df = filtered_df.copy()
+
+if county_search:
+    filtered_df = filtered_df[filtered_df["County"].str.lower().str.contains(county_search.strip().lower(), na=False)]
+
 
 def plot_strip_and_scatter(full_df, determinant_col, label, selected_region):
     """Strip plot and scatter composed into one chart, sharing a county-level
@@ -218,31 +228,10 @@ Life expectancy in the United States tells a deeply unequal story. County-level 
 """)
 st.divider()
 
-county_options = ["All Counties"] + sorted(
-    (df["County"] + ", " + df["State"].map(STATE_ABBREV)).dropna().unique().tolist()
-)
-selected_county = st.selectbox("Search County", county_options)
-
 st.altair_chart(
     plot_strip_and_scatter(filtered_df, selected_determinant, selected_label, selected_region),
     use_container_width=True,
 )
-
-st.divider()
-
-determinant_options = {
-    "Median Household Income": "Median Household Income",
-    "% Uninsured Adults": "% Uninsured Adults",
-    "% Food Insecure": "% Food Insecure",
-    "% Free or Reduced Lunch": "% Enrolled in Free or Reduced Lunch",
-    "% Physically Inactive": "% Physically Inactive",
-    "% Smoking": "% Adults Reporting Currently Smoking",
-    "% Rural": "% Rural",
-    "% Adults with Obesity": "% Adults with Obesity",
-    "% Children in Single-Parent Households": "% Children in Single-Parent Households",
-}
-selected_label = st.selectbox("Select Social Determinant", list(determinant_options.keys()))
-selected_determinant = determinant_options[selected_label]
 
 st.divider()
 
