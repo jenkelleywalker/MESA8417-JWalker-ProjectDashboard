@@ -243,7 +243,6 @@ determinant_options = {
 }
 selected_label = st.selectbox("Select Social Determinant", list(determinant_options.keys()))
 selected_determinant = determinant_options[selected_label]
-)
 
 st.divider()
 
