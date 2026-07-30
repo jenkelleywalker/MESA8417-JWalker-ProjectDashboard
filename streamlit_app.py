@@ -62,7 +62,10 @@ selected_region = st.sidebar.radio(
 )
 
 st.sidebar.markdown("---")
-county_search = st.sidebar.text_input("Search County", placeholder="e.g. Suffolk")
+county_options = ["All Counties"] + sorted(
+    (df["County"] + ", " + df["State"].map(STATE_ABBREV)).dropna().unique().tolist()
+)
+selected_county = st.sidebar.selectbox("Search County", county_options)
 
 st.sidebar.markdown("---")
 
@@ -87,9 +90,12 @@ else:
 
 extremes_df = filtered_df.copy()
 
-if county_search:
-    filtered_df = filtered_df[filtered_df["County"].str.lower().str.contains(county_search.strip().lower(), na=False)]
-
+if selected_county != "All Counties":
+    county_name, state_abbrev = selected_county.rsplit(", ", 1)
+    state_full = {v: k for k, v in STATE_ABBREV.items()}.get(state_abbrev)
+    filtered_df = filtered_df[
+        (filtered_df["County"] == county_name) & (filtered_df["State"] == state_full)
+    ]
 
 def plot_strip_and_scatter(full_df, determinant_col, label, selected_region):
     """Strip plot and scatter composed into one chart, sharing a county-level
