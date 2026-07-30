@@ -62,7 +62,7 @@ selected_region = st.sidebar.radio(
 )
 
 st.sidebar.markdown("---")
-county_search = st.sidebar.text_input("Search County", placeholder="e.g. Suffolk")
+county_search = st.sidebar.text_input("Search County", placeholder="e.g. Suffolk, MA")
 
 if county_search:
     matches = sorted(
