@@ -153,7 +153,7 @@ def plot_strip_and_scatter(full_df, determinant_col, label, selected_region):
         height=420,
         title=alt.TitleParams(
             text=f"{label} vs. Life Expectancy",
-            subtitle="Hover over a county dot to highlight it in the strip plot above",
+            subtitle="Use the sidebar dropdown to change the determinant. Hover over a county dot to highlight it in the strip plot above.",
             subtitleColor="#E45756",
             subtitleFontSize=12,
             subtitleFontStyle="italic",
