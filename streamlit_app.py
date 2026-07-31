@@ -222,9 +222,26 @@ st.altair_chart(
 )
 
 st.divider()
+st.subheader("County Lookup")
+county_search = st.text_input("Search for a county", placeholder="e.g. Suffolk, MA")
+
+if county_search:
+    results = df[
+        (df["County"] + ", " + df["State"].map(STATE_ABBREV))
+        .str.lower()
+        .str.contains(county_search.strip().lower(), na=False)
+    ][["County", "State", "Region", "Life Expectancy", selected_determinant]].copy()
+    
+    if len(results) == 0:
+        st.caption("No counties found.")
+    else:
+        st.dataframe(results, use_container_width=True, hide_index=True)
+
+st.divider()
 
 scope = selected_region if selected_region != "All Regions" else "All Regions"
 st.subheader(f"County Extremes ({scope})")
+
 col3, col4 = st.columns(2)
 
 with col3:
