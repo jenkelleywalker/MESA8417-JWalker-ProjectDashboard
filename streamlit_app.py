@@ -75,7 +75,7 @@ selected_region = st.sidebar.radio(
 )
 
 st.sidebar.markdown("---")
-selected_label = st.sidebar.selectbox("Select Social Determinant", list(determinant_options.keys()))
+selected_label = st.sidebar.selectbox("Select Scatter Plot Determinant", list(determinant_options.keys()))
 selected_determinant = determinant_options[selected_label]
 
 if selected_region == "All Regions":
